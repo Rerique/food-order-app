@@ -1,3 +1,4 @@
+import Modal from '../UI/Modal';
 import styles from './Cart.module.css';
 
 export default function Cart() {
@@ -12,13 +13,13 @@ export default function Cart() {
   );
 
   return (
-    <div>
+    <Modal>
       {cartItems}
       <div className={styles.total}>
         <span>Total Amount</span>
         <span>35.62</span>
       </div>
-      <div className={styles.action}>
+      <div className={styles.actions}>
         <button type='button' className={styles['button--alt']}>
           Close
         </button>
@@ -26,6 +27,6 @@ export default function Cart() {
           Order
         </button>
       </div>
-    </div>
+    </Modal>
   );
 }
