@@ -4,7 +4,7 @@ export default function Input({ label, input }) {
   return (
     <div className={styles.input}>
       <label htmlFor={input.id}>
-        {`${label} :`}
+        {label}
         <input {...input} />
       </label>
     </div>

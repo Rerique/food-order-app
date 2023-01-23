@@ -5,7 +5,7 @@ export default function MealItemForm({ id }) {
   return (
     <form className={styles.form}>
       <Input
-        label='Amount'
+        label='Amount :'
         input={{
           id: `amount_${id}`,
           type: 'number',
