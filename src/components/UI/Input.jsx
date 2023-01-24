@@ -1,27 +1,23 @@
+import React from 'react';
 import styles from './Input.module.css';
 
-export default function Input({
-  label,
-  id,
-  type,
-  min,
-  max,
-  step,
-  defaultValue,
-}) {
+const Input = React.forwardRef((props, ref) => {
   return (
     <div className={styles.input}>
-      <label htmlFor={id}>
-        {label}
+      <label htmlFor={props.id}>
+        {props.label}
         <input
-          id={id}
-          type={type}
-          min={min}
-          max={max}
-          step={step}
-          defaultValue={defaultValue}
+          ref={ref}
+          id={props.id}
+          type={props.type}
+          min={props.min}
+          max={props.max}
+          step={props.step}
+          defaultValue={props.defaultValue}
         />
       </label>
     </div>
   );
-}
+});
+
+export default Input;
