@@ -8,7 +8,7 @@ export default function MealItem({ id, name, description, price }) {
 
   const addToCartHandler = (amount) => {
     addItem({
-      id,
+      id: `${id}_${Date.now()}`,
       name,
       amount,
       price,

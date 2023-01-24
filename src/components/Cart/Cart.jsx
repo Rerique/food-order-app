@@ -1,14 +1,29 @@
+import { useContext } from 'react';
+import CartContext from '../../context/cart-context';
 import Modal from '../UI/Modal';
 import styles from './Cart.module.css';
+import CartItem from './CartItem';
 
 export default function Cart({ onHideCart }) {
+  const { items, totalAmount } = useContext(CartContext);
+
+  const fixedTotalAmount = `$${totalAmount.toFixed(2)}`;
+  const hasItems = items.length > 0;
+
+  const cartItemRemoveHandler = () => {};
+
+  const cartItemAddHandler = () => {};
+
   const cartItems = (
     <ul className={styles['cart-items']}>
-      {[{ id: 'c1', name: 'Sushi', amount: '2', price: '12.99' }].map(
-        (item) => (
-          <li key={item.id}>{item.name}</li>
-        ),
-      )}
+      {items.map((item) => (
+        <CartItem
+          item={item}
+          key={item.id}
+          onAdd={cartItemAddHandler}
+          onRemove={cartItemRemoveHandler}
+        />
+      ))}
     </ul>
   );
 
@@ -17,7 +32,7 @@ export default function Cart({ onHideCart }) {
       {cartItems}
       <div className={styles.total}>
         <span>Total Amount</span>
-        <span>35.62</span>
+        <span>{fixedTotalAmount}</span>
       </div>
       <div className={styles.actions}>
         <button
@@ -26,9 +41,11 @@ export default function Cart({ onHideCart }) {
           onClick={onHideCart}>
           Close
         </button>
-        <button type='button' className={styles.button}>
-          Order
-        </button>
+        {hasItems && (
+          <button type='button' className={styles.button}>
+            Order
+          </button>
+        )}
       </div>
     </Modal>
   );
