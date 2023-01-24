@@ -1,8 +1,11 @@
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
 
-function Backdrop() {
-  return <div className={styles.backdrop} />;
+function Backdrop({ onHideCart }) {
+  return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div className={styles.backdrop} onClick={onHideCart} aria-hidden='true' />
+  );
 }
 
 function ModalOverlay({ children }) {
@@ -15,10 +18,13 @@ function ModalOverlay({ children }) {
 
 const portalElement = document.getElementById('overlay');
 
-export default function Modal({ children }) {
+export default function Modal({ children, onHideCart }) {
   return (
     <>
-      {ReactDOM.createPortal(<Backdrop />, portalElement)}
+      {ReactDOM.createPortal(
+        <Backdrop onHideCart={onHideCart} />,
+        portalElement,
+      )}
       {ReactDOM.createPortal(
         <ModalOverlay>{children}</ModalOverlay>,
         portalElement,

@@ -1,26 +1,29 @@
 import Modal from '../UI/Modal';
 import styles from './Cart.module.css';
 
-export default function Cart() {
+export default function Cart({ onHideCart }) {
   const cartItems = (
     <ul className={styles['cart-items']}>
       {[{ id: 'c1', name: 'Sushi', amount: '2', price: '12.99' }].map(
         (item) => (
-          <li>{item.name}</li>
+          <li key={item.id}>{item.name}</li>
         ),
       )}
     </ul>
   );
 
   return (
-    <Modal>
+    <Modal onHideCart={onHideCart}>
       {cartItems}
       <div className={styles.total}>
         <span>Total Amount</span>
         <span>35.62</span>
       </div>
       <div className={styles.actions}>
-        <button type='button' className={styles['button--alt']}>
+        <button
+          type='button'
+          className={styles['button--alt']}
+          onClick={onHideCart}>
           Close
         </button>
         <button type='button' className={styles.button}>
