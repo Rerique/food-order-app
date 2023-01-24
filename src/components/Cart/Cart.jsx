@@ -5,14 +5,18 @@ import styles from './Cart.module.css';
 import CartItem from './CartItem';
 
 export default function Cart({ onHideCart }) {
-  const { items, totalAmount } = useContext(CartContext);
+  const { items, totalAmount, addItem, removeItem } = useContext(CartContext);
 
   const fixedTotalAmount = `$${totalAmount.toFixed(2)}`;
   const hasItems = items.length > 0;
 
-  const cartItemRemoveHandler = () => {};
+  const cartItemRemoveHandler = (id) => {
+    removeItem(id);
+  };
 
-  const cartItemAddHandler = () => {};
+  const cartItemAddHandler = (item) => {
+    addItem({ ...item, amount: 1 });
+  };
 
   const cartItems = (
     <ul className={styles['cart-items']}>
