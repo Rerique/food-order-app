@@ -1,10 +1,12 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import CartContext from '../../context/cart-context';
 import Modal from '../UI/Modal';
 import styles from './Cart.module.css';
 import CartItem from './CartItem';
+import Checkout from './Checkout';
 
 export default function Cart({ onHideCart }) {
+  const [isCheckout, setIsCheckout] = useState(false);
   const { items, totalAmount, addItem, removeItem } = useContext(CartContext);
 
   const fixedTotalAmount = `$${totalAmount.toFixed(2)}`;
@@ -16,6 +18,10 @@ export default function Cart({ onHideCart }) {
 
   const cartItemAddHandler = (item) => {
     addItem({ ...item, amount: 1 });
+  };
+
+  const orderHandler = () => {
+    setIsCheckout(true);
   };
 
   const cartItems = (
@@ -31,6 +37,22 @@ export default function Cart({ onHideCart }) {
     </ul>
   );
 
+  const modalActions = (
+    <div className={styles.actions}>
+      <button
+        type='button'
+        className={styles['button--alt']}
+        onClick={onHideCart}>
+        Close
+      </button>
+      {hasItems && (
+        <button type='button' className={styles.button} onClick={orderHandler}>
+          Order
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <Modal onHideCart={onHideCart}>
       {cartItems}
@@ -38,19 +60,8 @@ export default function Cart({ onHideCart }) {
         <span>Total Amount</span>
         <span>{fixedTotalAmount}</span>
       </div>
-      <div className={styles.actions}>
-        <button
-          type='button'
-          className={styles['button--alt']}
-          onClick={onHideCart}>
-          Close
-        </button>
-        {hasItems && (
-          <button type='button' className={styles.button}>
-            Order
-          </button>
-        )}
-      </div>
+      {isCheckout && <Checkout onCancel={onHideCart} />}
+      {!isCheckout && modalActions}
     </Modal>
   );
 }
