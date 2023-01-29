@@ -1,25 +1,17 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './AvailableMeals.module.css';
 import Card from '../UI/Card';
 import MealItem from './MealItem/MealItem';
+import useHttp from '../../hooks/useHttp';
 
 export default function AvailableMeals() {
   const [meals, setMeals] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { isLoading, error, sendRequest: fetchMeals } = useHttp();
 
-  const mealsRequest = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        'https://react-http-request-pract-9cb0f-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json',
-      );
-      const meals = await response.json();
-
+  useEffect(() => {
+    const transformData = (data) => {
       const mealsData = [];
-      Object.entries(meals).forEach(([key, value]) => {
+      Object.entries(data).forEach(([key, value]) => {
         mealsData.push({
           id: key,
           name: value.name,
@@ -27,17 +19,16 @@ export default function AvailableMeals() {
           price: Number(value.price),
         });
       });
-
       setMeals(mealsData);
-    } catch (err) {
-      setError(err.message);
-    }
-    setIsLoading(false);
-  }, []);
+    };
 
-  useEffect(() => {
-    mealsRequest();
-  }, [mealsRequest]);
+    fetchMeals(
+      {
+        url: 'https://react-http-request-pract-9cb0f-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json',
+      },
+      transformData,
+    );
+  }, [fetchMeals]);
 
   const mealsList = meals.map((meal) => (
     <MealItem
@@ -51,16 +42,16 @@ export default function AvailableMeals() {
 
   let content = '';
   if (error) {
-    content = <p>{error}</p>;
+    content = <p className={styles.mealsState}>{error}</p>;
   }
   if (isLoading) {
-    content = <p>Loading ...</p>;
+    content = <p className={styles.mealsState}>Loading ...</p>;
   }
 
   return (
     <section className={styles.meals}>
       <Card>
-        {isLoading && content}
+        {content}
         <ul>{mealsList}</ul>
       </Card>
     </section>
