@@ -8,8 +8,9 @@ import Checkout from './Checkout';
 
 export default function Cart({ onHideCart }) {
   const [isCheckout, setIsCheckout] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const { items, totalAmount, addItem, removeItem } = useContext(CartContext);
-  const { sendRequest } = useHttp();
+  const { isLoading: isSubmitting, sendRequest } = useHttp();
 
   const fixedTotalAmount = `$${totalAmount.toFixed(2)}`;
   const hasItems = items.length > 0;
@@ -26,12 +27,13 @@ export default function Cart({ onHideCart }) {
     setIsCheckout(true);
   };
 
-  const submitOrderHandler = (userData) => {
-    sendRequest({
+  const submitOrderHandler = async (userData) => {
+    await sendRequest({
       url: 'https://react-http-request-pract-9cb0f-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json',
       method: 'POST',
       body: { userData, orderedItems: items, totalAmount: fixedTotalAmount },
     });
+    setDidSubmit(true);
   };
 
   const cartItems = (
@@ -63,8 +65,8 @@ export default function Cart({ onHideCart }) {
     </div>
   );
 
-  return (
-    <Modal onHideCart={onHideCart}>
+  const cartModalContent = (
+    <>
       {cartItems}
       <div className={styles.total}>
         <span>Total Amount</span>
@@ -74,6 +76,27 @@ export default function Cart({ onHideCart }) {
         <Checkout onCancel={onHideCart} onConfirm={submitOrderHandler} />
       )}
       {!isCheckout && modalActions}
+    </>
+  );
+
+  const didSubmitModalContent = (
+    <>
+      <p>Successfully sending the order!</p>
+      <div className={styles.actions}>
+        <button
+          type='button'
+          className={styles['button--alt']}
+          onClick={onHideCart}>
+          Close
+        </button>
+      </div>
+    </>
+  );
+
+  return (
+    <Modal onHideCart={onHideCart}>
+      {isSubmitting && !didSubmit && cartModalContent}
+      {didSubmit && didSubmitModalContent}
     </Modal>
   );
 }
