@@ -9,7 +9,8 @@ import Checkout from './Checkout';
 export default function Cart({ onHideCart }) {
   const [isCheckout, setIsCheckout] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
-  const { items, totalAmount, addItem, removeItem } = useContext(CartContext);
+  const { items, totalAmount, addItem, removeItem, clearCart } =
+    useContext(CartContext);
   const { isLoading: isSubmitting, sendRequest } = useHttp();
 
   const fixedTotalAmount = `$${totalAmount.toFixed(2)}`;
@@ -33,6 +34,8 @@ export default function Cart({ onHideCart }) {
       method: 'POST',
       body: { userData, orderedItems: items, totalAmount: fixedTotalAmount },
     });
+
+    clearCart();
     setDidSubmit(true);
   };
 
