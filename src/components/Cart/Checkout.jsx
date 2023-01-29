@@ -4,7 +4,7 @@ import styles from './Checkout.module.css';
 const isEmpty = (value) => value.trim() === '';
 const isFiveChars = (value) => value.trim().length === 5;
 
-function Checkout({ onCancel }) {
+function Checkout({ onCancel, onConfirm }) {
   const [formInputValidity, setFormInputValidity] = useState({
     name: true,
     street: true,
@@ -40,9 +40,16 @@ function Checkout({ onCancel }) {
     const formIsValid =
       nameIsValid && streetIsValid && cityIsValid && postalCodeIsValid;
 
-    if (formIsValid) {
-      console.log(enteredName);
+    if (!formIsValid) {
+      return;
     }
+
+    onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostalCode,
+    });
   };
 
   const nameControlClasses = !formInputValidity.name ? styles.invalid : '';
